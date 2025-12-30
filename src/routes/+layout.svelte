@@ -3,17 +3,24 @@
 	import { locales, localizeHref } from '$lib/paraglide/runtime';
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
+    import Navbar from '$lib/components/Navbar.svelte';
+    import Footer from '$lib/components/Footer.svelte';
+    import Container from '$lib/components/Container.svelte';
 
 	let { children } = $props();
 </script>
 
+
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
-{@render children()}
-<div style="display:none">
-	{#each locales as locale}
-		<a href={localizeHref(page.url.pathname, { locale })}>
-			{locale}
-		</a>
-	{/each}
+<div class="min-h-screen flex flex-col">
+  <Navbar />
+
+  <main class="flex-1">
+    <Container size="prose">
+        {@render children()} 
+    </Container> 
+  </main>
+
+  <Footer />
 </div>

@@ -1,2 +1,53 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+
+
+/* Global layout helpers */
+:root {
+  --container-max: 72rem;   /* ~1152px (like Tailwind max-w-6xl) */
+  --container-wide: 80rem;  /* ~1280px (like max-w-7xl) */
+  --container-prose: 48rem; /* ~768px  (nice for long text) */
+
+  --px: 1rem;  /* base horizontal padding */
+}
+
+@media (min-width: 640px) {
+  :root { --px: 1.5rem; }
+}
+@media (min-width: 1024px) {
+  :root { --px: 2rem; }
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  padding: 2.5rem 0; /* vertical spacing */
+}
+
+/* Container (default) */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-left: var(--px);
+  padding-right: var(--px);
+}
+
+/* Optional variants */
+.container--wide {
+  max-width: var(--container-wide);
+}
+
+.container--prose {
+  max-width: var(--container-prose);
+}
+
+/* Optional: consistent section spacing */
+.section {
+  padding: 2rem 0;
+}
