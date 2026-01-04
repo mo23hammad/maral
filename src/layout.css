@@ -1,0 +1,97 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/space-grotesk/latin-500.css';
+@import '@fontsource/space-grotesk/latin-600.css';
+@import '@fontsource/space-grotesk/latin-700.css';
+
+
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    @apply antialiased text-slate-900;
+  }
+
+  .text-body {
+    @apply font-sans text-[16px] md:text-[17px] leading-[1.7] md:leading-[1.75] tracking-[-0.01em] text-[#0B0D10]/90 antialiased;
+  }
+
+  /* Better default focus */
+  :focus-visible {
+    @apply outline-none ring-2 ring-slate-400 ring-offset-2;
+  }
+}
+
+
+@layer utilities {
+  .gradient-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 300% 100%;
+    animation: gradient 4s ease-in-out infinite;
+  }
+
+  @keyframes gradient {
+    0% { background-position: 0% 100%; }
+    100% { background-position: 100% -100%; }}
+}
+
+@layer components {
+  /* ===== Typography ===== */
+  .h1 { @apply sm:text-5xl font-display font-semibold tracking-tight; }
+  .h2 { @apply text-[40px] sm:text-4xl font-display font-semibold tracking-tight; }
+  .h3 { @apply text-[28px] sm:text-3xl font-display font-semibold tracking-tight; }
+
+  .text-muted { @apply text-sm leading-6 text-slate-500; }
+
+  /* ===== Links ===== */
+  .link {
+    @apply text-slate-900 underline underline-offset-4 decoration-slate-300
+           hover:decoration-slate-900 transition-colors;
+  }
+
+  /* ===== Buttons ===== */
+   .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[14px] font-semibold tracking-[-0.01em] antialiased transition active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-[#0B0D10] px-5 py-3 text-[14px] font-semibold tracking-[-0.01em] text-white antialiased transition
+         hover:-translate-y-[1px] hover:shadow-sm
+         focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25
+         active:translate-y-0 active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-black/15 bg-white px-5 py-3 text-[14px] font-semibold tracking-[-0.01em] text-[#0B0D10] antialiased transition
+         hover:-translate-y-[1px] hover:border-black/25 hover:bg-[#F7F7F7]
+         focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25
+         active:translate-y-0 active:scale-[0.98];
+  }
+
+  .btn-accent {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-[#3B82F6] px-5 py-3 text-[14px] font-semibold tracking-[-0.01em] text-white antialiased transition hover:-translate-y-[1px] hover:brightness-95 hover:shadow-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/30 active:translate-y-0 active:scale-[0.98];
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-[14px] font-semibold tracking-[-0.01em] text-[#0B0D10] antialiased transition
+         hover:bg-black/5
+         focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25
+         active:scale-[0.98];
+  }
+  .btn-link {
+    @apply inline-flex items-center gap-2 text-[14px] font-semibold tracking-[-0.01em] text-[#0B0D10] antialiased transition hover:text-[#3B82F6] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25 
+  }
+}
+
