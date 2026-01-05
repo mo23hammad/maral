@@ -1,55 +1,23 @@
 <script>
-	import { paint } from '$lib/transitions/gradient.ts';
     import Card from '$lib/components/Card.svelte';
-	import Section from '$lib/components/Section.svelte';
-
-	let canvas;
-
-	$effect(() => {
-		const context = canvas.getContext('2d');
-
-		let frame = requestAnimationFrame(function loop(t) {
-			frame = requestAnimationFrame(loop);
-			paint(context, t);
-		});
-
-		return () => {
-			cancelAnimationFrame(frame);
-		};
-	});
+	import Hero from '$lib/components/homepage/Hero.svelte';
+	import Services from '$lib/components/homepage/Services.svelte';
+    import Capabilities from '$lib/components/homepage/Capabilities.svelte';
+	import Process from '$lib/components/homepage/Process.svelte';
+	import Proof from '$lib/components/homepage/Proof.svelte';
+	import CTA from '$lib/components/homepage/CTA.svelte';
 </script>
 
 
 
-<h1 class="font-display fixed top-7/15 left-1/3 font-bold text-[63px] sr-only">
-    Future of website developing
-</h1>
 
-<canvas bind:this={canvas} class="relative top-7/16 left-1/10 w-81/100 h-1/10 "></canvas>
 
-<Section />
-<Section />
-<Section />
-<Section />
-
-<style>
-  canvas {
-    mask: url(/text64362.svg) 50% 50% no-repeat;
-    -webkit-mask: url(/text64362.svg) 50% 50% no-repeat;
-
-    /* phone default */
-    mask-size: 70vmin;
-    -webkit-mask-size: 70vmin;
-  }
-
-  /* desktop and up */
-  @media (min-width: 768px) {
-    canvas {
-      mask-size: 130vmin;
-      -webkit-mask-size: 130vmin;
-    }
-  }
-</style>
+<Hero />
+<Services />
+<Capabilities />
+<Process />
+<Proof />
+<CTA />
 
 <!-- <button -->
 <!--   class="inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[14px] font-semibold tracking-[-0.01em] antialiased transition active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50" -->

@@ -1,6 +1,9 @@
 
+<script lang="ts">
+  import { Instagram, Linkedin, Github, Youtube } from 'lucide-svelte';
+</script>
 
-<footer class="mt-16 border-t border-white/10 bg-[#0B0D10]">
+<footer class="border-t border-white/10 bg-[#0B0D10]">
   <div class="mx-auto max-w-6xl px-4 py-12">
     <!-- Top row -->
     <div class="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
@@ -45,7 +48,7 @@
           <div class="text-[12px] font-semibold tracking-[0.14em] text-white/50">COMPANY</div>
           <div class="mt-4 space-y-3 text-[14px] font-semibold tracking-[-0.01em]">
             <a href="/about" class="block text-white/75 transition hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25">
-              About
+              About Us
             </a>
             <a href="/services" class="block text-white/75 transition hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25">
               Services
@@ -85,37 +88,53 @@
 
       <!-- CTA -->
       <div class="md:w-[280px]">
-        <div class="rounded-xl border border-white/10 bg-white/5 p-5">
-          <div class="text-[12px] font-semibold tracking-[0.14em] text-white/50">READY?</div>
-          <div class="mt-3 font-['Space_Grotesk'] text-[18px] font-semibold tracking-[-0.02em] text-white">
-            Get a quote
-          </div>
-          <p class="mt-2 text-[14px] leading-[1.7] tracking-[-0.01em] text-white/70">
-            Tell us what you need. We’ll reply within 24 hours.
-          </p>
-
-          <button
-            href="/contact"
-            class="btn-accent w-full mt-3"
-          >
-            Get a quote
-          </button>
-
+        <div class="flex rounded-xl items-center justify-center border border-white/10 bg-white/5">
           <!-- Socials -->
-          <div class="mt-5 flex items-center gap-3">
-            <a href="#" class="rounded-lg p-2 text-white/70 transition hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25" aria-label="Instagram">
-              IG
-            </a>
-            <a href="#" class="rounded-lg p-2 text-white/70 transition hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25" aria-label="LinkedIn">
-              IN
-            </a>
-            <a href="#" class="rounded-lg p-2 text-white/70 transition hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25" aria-label="GitHub">
-              GH
-            </a>
-            <a href="#" class="rounded-lg p-2 text-white/70 transition hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25" aria-label="YouTube">
-              YT
-            </a>
-          </div>
+          <div class="flex gap-2 px-9 py-5">
+              <a
+            href="https://instagram.com/"
+            target="_blank"
+            rel="noreferrer"
+            class="rounded-lg p-2 text-white/70 transition hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25"
+            aria-label="Instagram"
+            title="Instagram"
+          >
+            <Instagram class="h-5 w-5" />
+          </a>
+
+          <a
+            href="https://linkedin.com/in/mohammad-mahdi-abedi/"
+            target="_blank"
+            rel="noreferrer"
+            class="rounded-lg p-2 text-white/70 transition hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25"
+            aria-label="LinkedIn"
+            title="LinkedIn"
+          >
+            <Linkedin class="h-5 w-5" />
+          </a>
+
+          <a
+            href="https://github.com/mo23hammad"
+            target="_blank"
+            rel="noreferrer"
+            class="rounded-lg p-2 text-white/70 transition hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25"
+            aria-label="GitHub"
+            title="GitHub"
+          >
+            <Github class="h-5 w-5" />
+          </a>
+
+          <a
+            href="https://youtube.com/@yourhandle"
+            target="_blank"
+            rel="noreferrer"
+            class="rounded-lg p-2 text-white/70 transition hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/25"
+            aria-label="YouTube"
+            title="YouTube"
+          >
+            <Youtube class="h-5 w-5" />
+          </a>
+        </div>
         </div>
       </div>
     </div>

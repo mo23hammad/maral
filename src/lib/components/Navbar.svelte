@@ -7,7 +7,7 @@
   import { page } from '$app/stores';
 
   const links = [
-    { href: '/about', label: 'About' },
+    { href: '/about', label: 'About Us' },
     { href: '/services', label: 'Services' },
     { href: '/portfolio', label: 'Portfolio' },
     { href: '/contact', label: 'Contact' }
@@ -61,7 +61,7 @@
     <!-- Right: CTA (match brand spacing) -->
     <div class="flex flex-1 justify-end">
       <button class="btn-primary mr-10">
-        Get a quote
+        Book a 15-min call
       </button>
     </div>
   </div>

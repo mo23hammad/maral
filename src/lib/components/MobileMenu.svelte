@@ -69,8 +69,8 @@
         aria-label="Open menu"
         aria-expanded={open}
         aria-controls="mobile-menu"
-        on:click={() => (open = !open)}
-        on:keydown={onKeydown}
+        onclick={() => (open = !open)}
+        onkeydown={onKeydown}
         class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/15 bg-white text-[#0B0D10] transition
                hover:border-black/25 hover:bg-black/5
                focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/20 active:scale-[0.98]"
@@ -93,26 +93,28 @@
       type="button"
       class="fixed inset-0 z-40 cursor-default bg-black/30 backdrop-blur-[2px]"
       aria-label="Close menu"
-      on:click={close}
-      on:keydown={onKeydown}
+      onclick={close}
+      onkeydown={onKeydown}
     ></button>
 
     <!-- Panel -->
     <div
       id="mobile-menu"
+      role="dialog"
+      aria-modal="true"
+      tabindex="-1"
       class="fixed left-0 right-0 top-[64px] z-50 mx-auto w-full max-w-6xl px-4"
-      on:keydown={onKeydown}
+      onkeydown={onKeydown}
     >
       <div class="rounded-2xl border border-black/10 bg-white shadow-[0_20px_60px_rgba(11,13,16,0.18)]">
         <div class="p-4">
-          <!-- Links -->
           <div class="grid gap-1">
             {#each links as link}
               {@const active = isActive($page.url.pathname, link.href)}
               <a
                 href={link.href}
                 aria-current={active ? 'page' : undefined}
-                on:click={close}
+                onclick={close}
                 class={[
                   'flex items-center justify-between rounded-xl px-4 py-3 text-[15px] font-semibold tracking-[-0.01em] transition',
                   'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/20',
@@ -131,7 +133,7 @@
           <!-- CTA -->
           <a
             href="/contact"
-            on:click={close}
+            onclick={close}
             class="inline-flex w-full items-center justify-center rounded-full bg-[#3B82F6] px-4 py-3 text-[14px] font-semibold tracking-[-0.01em] text-white transition
                    hover:-translate-y-[1px] hover:brightness-95 hover:shadow-[0_10px_30px_rgba(59,130,246,0.20)]
                    focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#3B82F6]/30 active:translate-y-0 active:scale-[0.98]"

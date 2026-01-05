@@ -1,36 +1,45 @@
 
+
 export function paint(context: CanvasRenderingContext2D, t: number): void {
 	const { width, height } = context.canvas;
 
-	// getImageData expects integer sizes
 	const w = Math.floor(width);
 	const h = Math.floor(height);
 
 	const imageData: ImageData = context.getImageData(0, 0, w, h);
 
+	// Brand blue (Tailwind blue-500): #3B82F6
+	const blue = { r: 0x3b, g: 0x82, b: 0xf6 };
+	const black = { r: 0, g: 0, b: 0 };
+
+	// helpers
+	const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
 	for (let p = 0; p < imageData.data.length; p += 4) {
 		const i = p / 4;
 		const x = i % w;
+		// const y = (i / w) >>> 0;
 
-		// normalized x (0..1)
 		const nx = x / w;
 
-		// speed controls how fast it moves (bigger = faster)
 		const speed = 0.0009;
-
-		// cycles controls how many black/white bands across the width
 		const cycles = 2;
 
-		// value in [0..255], smooth oscillation
-		const v = 80 + 107 * Math.sin(nx * cycles * Math.PI * 2 + t * speed);
+		// Wave in [-1..1]
+		const wave = Math.sin(nx * cycles * Math.PI * 2 + t * speed);
 
-		// Clamp and convert to int (safer)
-		const c = Math.max(0, Math.min(255, Math.round(v)));
+		// Convert to mix factor [0..1]
+        const mix = Math.pow((wave + 1) / 2, 1.6); // 1.2–2.5
 
-		imageData.data[p + 0] = c; // R
-		imageData.data[p + 1] = c; // G
-		imageData.data[p + 2] = c; // B
-		imageData.data[p + 3] = 255; // A
+		// Blend black -> blue
+		const r = Math.round(lerp(black.r, blue.r, mix));
+		const g = Math.round(lerp(black.g, blue.g, mix));
+		const b = Math.round(lerp(black.b, blue.b, mix));
+
+		imageData.data[p + 0] = r;
+		imageData.data[p + 1] = g;
+		imageData.data[p + 2] = b;
+		imageData.data[p + 3] = 255;
 	}
 
 	context.putImageData(imageData, 0, 0);
