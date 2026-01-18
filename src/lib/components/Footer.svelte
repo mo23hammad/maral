@@ -1,6 +1,8 @@
 
 <script lang="ts">
   import { Instagram, Linkedin, Github, Youtube } from 'lucide-svelte';
+
+  const src = "/logow.png"
 </script>
 
 <footer class="border-t border-white/10 bg-[#0B0D10]">
@@ -11,10 +13,10 @@
       <div class="max-w-sm">
         <div class="flex items-center gap-3">
           <!-- Logo placeholder -->
-          <span class="h-7 w-7 rounded-md border border-white/15 bg-white/5"></span>
+          <img class="w-10 h-10 rounded-md " alt="logo" {src} />
 
           <span class="font-['Space_Grotesk'] text-[16px] font-semibold tracking-[-0.02em] text-white">
-            Maral
+            MARAL
           </span>
         </div>
 

@@ -6,6 +6,8 @@
 <script lang="ts">
   import { page } from '$app/stores';
 
+  const src= "/logo.png";
+
   const links = [
     { href: '/about', label: 'About Us' },
     { href: '/services', label: 'Services' },
@@ -25,9 +27,9 @@
     <!-- Left: Brand -->
     <div class="flex flex-1 justify-start">
       <a href="/" class="ml-10 inline-flex items-center gap-3">
-        <span class="h-7 w-7 rounded-md border border-black/15 bg-white"></span>
+        <img class="w-10 h-10 rounded-md" alt="logo" {src} />
         <span class="font-['Space_Grotesk'] text-[16px] font-semibold tracking-[-0.02em] text-[#0B0D10]">
-          Maral
+          MARAL
         </span>
       </a>
     </div>
