@@ -1,29 +1,199 @@
 
 <script lang="ts">
-  import { Instagram, Linkedin, Github, Youtube, Mail, Phone, MapPin, ArrowRight } from "lucide-svelte";
-  import { Button } from "$lib/components/ui/button";
-  import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "$lib/components/ui/card";
-  import { Input } from "$lib/components/ui/input";
-  import { Label } from "$lib/components/ui/label";
-  import { Textarea } from "$lib/components/ui/textarea";
-  import { Separator } from "$lib/components/ui/separator";
-  import { Badge } from "$lib/components/ui/badge";
-  import { Slider } from "$lib/components/ui/slider/index.js";  
-  import * as Field from "$lib/components/ui/field/index.js";
-  import Dirham from "../Dirham.svelte";
-  import Timeline from "../Timeline.svelte";
+    import { Instagram, Linkedin, Github, Youtube, Mail, Phone, MapPin, ArrowRight } from "lucide-svelte";
+    import { Button } from "$lib/components/ui/button";
+    import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "$lib/components/ui/card";
+    import { Input } from "$lib/components/ui/input";
+    import { Label } from "$lib/components/ui/label";
+    import { Textarea } from "$lib/components/ui/textarea";
+    import { Separator } from "$lib/components/ui/separator";
+    import { Badge } from "$lib/components/ui/badge";
+    import { Slider } from "$lib/components/ui/slider/index.js";  
+    import * as Field from "$lib/components/ui/field/index.js";
+    import Dirham from "../Dirham.svelte";
+    import Timeline from "../Timeline.svelte";
+    import { CalendarDate,today, getLocalTimeZone } from "@internationalized/date"
+    import { Progress } from "bits-ui";
+    import { onMount,onDestroy } from "svelte";
+    import { cubicInOut } from "svelte/easing";
+    import { Tween } from "svelte/motion";
+    import { fade } from "svelte/transition";
+    import Message from "./Message.svelte";
+    import Error from "./Error.svelte";
 
-  // Form state (optional)
-  let name = $state("");
-  let email = $state("");
-  let company = $state("");
-  let message = $state("");
+    const tween = new Tween(0, { duration: 250, easing: cubicInOut });
 
-  let budget:number[]= $state([2000,110000]);
-  let timeline: string=$state('');
-  </script>
+    const labelId = $props.id();
+    type Status = 'idle' | 'sending' | 'sent' | 'error';
+    let status = $state<Status>('idle');
 
-<section class="bg-[#F7F7F7] pb-5 md:pb-5">
+    // Form state
+    let name = $state("");
+    let email = $state("");
+    let email2 = $state("");
+    let website = $state("");
+    const startedAt = Date.now();
+    let elapsedMs:number = 0;
+    let company = $state("");
+    let message = $state("");
+    let errorMsg = $state("");
+
+    let budget: number[] = $state([2000, 110000]);
+    let timeline = $state<CalendarDate>();
+
+    // -------- perceived progress driver --------
+    let progressTimer: number | null = null;
+    let p = 0;
+
+    function onclick(){
+      status = 'idle';
+      tween.set(0)
+    }
+
+    function startProgress() {
+        // reset
+        p = 0;
+        tween.set(0);
+        elapsedMs = Date.now() - startedAt;
+
+        // clear any previous
+        if (progressTimer) {
+          clearInterval(progressTimer);
+          progressTimer = null;
+        }
+
+        progressTimer = window.setInterval(() => {
+          // fast to ~70, then creep to 90
+          if (p < 70) p += 6;
+          else if (p < 90) p += 1.2;
+
+          p = Math.min(90, p);
+          tween.set(p);
+        }, 120);
+    }
+
+    function stopProgress(finalValue = 100) {
+        if (progressTimer) {
+          clearInterval(progressTimer);
+          progressTimer = null;
+        }
+        tween.set(finalValue);
+    }
+
+    onDestroy(() => {
+        if (progressTimer) clearInterval(progressTimer);
+        });
+
+        async function onsubmit(e:SubmitEvent) {
+        e.preventDefault();
+
+        status = 'sending';
+        errorMsg = '';
+        startProgress();
+
+        const payload = {
+          name: name.trim(),
+          email: email.trim(),
+          email2: email2.trim(),
+          website: website.trim(),
+          message: message.trim(),
+          company: (company ?? '').trim(),
+          budgetMin: String(budget[0]),
+          budgetMax: String(budget[1]),
+          timeline: timeline?.toString?.() ?? String(timeline),
+          elapsedMs: elapsedMs
+        };
+
+        try {
+          const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const text = await res.text();
+          let data: any = null;
+          try { data = JSON.parse(text); } catch {}
+
+          if (res.ok && data?.ok) {
+            // finish the bar
+            stopProgress(100);
+            
+            tween.set(100);
+
+            await new Promise((r) => setTimeout(r, 180));
+
+            status = 'sent'; // or 'error'
+
+            // reset fields
+            name = '';
+            email = '';
+            email2 = '';
+            message = '';
+            company = '';
+            budget = [2000, 110000];
+            timeline = today(getLocalTimeZone());
+
+            // let user see 100% for a moment, then close overlay
+            // setTimeout(() => {
+            //   status = 'idle';
+            //   tween.set(0);
+            // }, 450);
+          } else {
+            stopProgress(100);
+            status = 'error';
+            errorMsg = data?.error ?? `Request failed (${res.status})`;
+
+            // close overlay after a moment (optional)
+            setTimeout(() => {
+              status = 'idle';
+              tween.set(0);
+            }, 650);
+          }
+        } catch (e) {
+          stopProgress(100);
+          status = 'error';
+          errorMsg = 'Network error. Please try again.';
+
+          setTimeout(() => {
+            status = 'idle';
+            tween.set(0);
+          }, 650);
+        }
+    }
+</script>
+
+{#if tween.current < 100 && tween.current !== 0 && status !== 'idle' }
+  <div
+    class="fixed inset-0 z-50 bg-white/95 backdrop-blur-sm flex items-center justify-center p-6"
+    out:fade
+  >
+    <div class="w-full max-w-lg space-y-3">
+      <div class="flex items-center justify-between text-sm font-medium">
+        <span id={labelId}>Sending...</span>
+        <span aria-label="progress percent">{Math.round(tween.current ?? 0)}%</span>
+      </div>
+
+      <Progress.Root
+        aria-labelledby={labelId}
+        value={Math.round(tween.current ?? 0)}
+        max={100}
+        class="relative h-[14px] w-full overflow-hidden rounded-xl bg-dark-10 shadow-mini-inset"
+      >
+        <div
+          class="h-full rounded-xl bg-foreground shadow-mini-inset transition-[width] duration-150"
+          style={`width: ${Math.round(tween.current ?? 0)}%`}
+        />
+      </Progress.Root>
+    </div>
+  </div>
+{:else if status === 'sent'}
+    <Message {onclick} />
+{:else if errorMsg}
+    <Error bind:value={errorMsg}/>
+{/if}
+
+<section class="bg-[#F7F7F7] pb-5 md:pb-5 z-0">
   <div class="mx-auto w-full max-w-6xl px-4 md:px-6">
     <div class="grid gap-6 md:grid-cols-12">
       <!-- LEFT: FORM -->
@@ -55,7 +225,7 @@
         </CardHeader>
 
         <CardContent class="px-7 pb-7 md:px-10 md:pb-10">
-          <form class="space-y-5">
+          <form class="space-y-5" {onsubmit}>
             <!-- Row 1 -->
             <div class="grid gap-4 md:grid-cols-2">
               <div class="space-y-2">
@@ -85,7 +255,8 @@
             </div>
 
             <!-- Company -->
-            <div class="space-y-2">
+            <div class="grid gap-4 md:grid-cols-2">
+              <div class="space-y-2">
               <Label class="text-[12px] font-semibold tracking-[0.12em] text-[#0B0D10]/55" for="company">
                 COMPANY <span class="text-[#0B0D10]/35">(optional)</span>
               </Label>
@@ -98,6 +269,21 @@
                        focus-visible:ring-4 focus-visible:ring-[#3B82F6]/15"
               />
             </div>
+
+              <div class="space-y-2">
+                <Label class="text-[12px] font-semibold tracking-[0.12em] text-[#0B0D10]/55" for="confirm email">CONFIRM EMAIL</Label>
+                <Input
+                  id="confirmEmail"
+                  type="email"
+                  bind:value={email2}
+                  placeholder="Re-enter your email"
+                  class="h-12 rounded-2xl border-black/15 bg-white text-[14px] font-semibold tracking-[-0.01em] text-[#0B0D10]
+                         placeholder:text-[#0B0D10]/35
+                         focus-visible:ring-4 focus-visible:ring-[#3B82F6]/15"
+                />
+              </div>
+            </div>
+
 
             <!-- Need -->
             <div class="space-y-2">
@@ -112,6 +298,20 @@
                 class="min-h-[140px] resize-none rounded-2xl border-black/15 bg-white text-[14px] leading-[1.85] tracking-[-0.01em] text-[#0B0D10]
                        placeholder:text-[#0B0D10]/35
                        focus-visible:ring-4 focus-visible:ring-[#3B82F6]/15"
+              />
+            </div>
+            
+            <!-- Honeypot: keep it in DOM, visually hidden -->
+            <div class="sr-only" aria-hidden="true">
+              <label for="website">Website</label>
+              <input
+                id="website"
+                name="website"
+                type="text"
+                tabindex="-1"
+                autocomplete="off"
+                value={website}
+                oninput={(e) => (website = (e.currentTarget as HTMLInputElement).value)}
               />
             </div>
 
@@ -139,7 +339,7 @@
                   </Field.Field>
                 </div>
               <div class="space-y-2">
-                <Timeline />
+                <Timeline bind:value={timeline} />
               </div>
             </div>
 

@@ -6,4 +6,4 @@ img.aed{
 }
 </style>
 
-<img class="aed"/>
+<img alt="dirham" class="aed"/>

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import Hero from "$lib/components/contact/Hero.svelte";
     import Options from "$lib/components/contact/Options.svelte"
 	import Howwework from "$lib/components/contact/Howwework.svelte";
@@ -9,7 +9,7 @@
 
 
 <Hero />
-<Options />
+<Options   />
 <Howwework />
 <Whattosend />
 <Faq />
