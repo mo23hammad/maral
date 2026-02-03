@@ -13,6 +13,8 @@ services:
     restart: unless-stopped
 
   app:
+    env_file:
+      -.env
     build: .
     environment:
       NODE_ENV: production
