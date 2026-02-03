@@ -41,7 +41,7 @@ services:
 
   
   certbot:
-    image: certbot/certbot:latest
+    image: certbot/certbot:amd64-nightly
     volumes:
       - ./certbot/www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt
