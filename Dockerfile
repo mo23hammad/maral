@@ -1,13 +1,17 @@
 
+
 # ---------- build ----------
 FROM node:20-alpine AS build
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
-RUN npm ci
+# If your dependencies need native builds, uncomment:
+# RUN apk add --no-cache libc6-compat
+
+COPY package.json yarn.lock ./
+RUN corepack enable && yarn install --frozen-lockfile
 
 COPY . .
-RUN npm run build
+RUN yarn build
 
 # ---------- runtime ----------
 FROM node:20-alpine AS runtime
@@ -16,9 +20,14 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
+# If your runtime needs native libs, uncomment:
+# RUN apk add --no-cache libc6-compat
+
 # Install only production deps
-COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev && npm cache clean --force
+COPY package.json yarn.lock ./
+RUN corepack enable \
+  && yarn install --frozen-lockfile --production=true \
+  && yarn cache clean
 
 # Copy build output only
 COPY --from=build /app/build ./build
