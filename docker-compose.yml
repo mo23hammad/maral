@@ -14,7 +14,7 @@ services:
 
   app:
     env_file:
-      -.env
+      .env
     build: .
     environment:
       NODE_ENV: production
